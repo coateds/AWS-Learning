@@ -3,6 +3,8 @@ Goal: create a zip file that can be uploaded to AWS Lambda to create a new Pytho
 
 ## The top level sequence is
 1. Create an EC2 instance out of the Amazon Linux 2 AMI (Requires a 64-bit Amazon Linux instance)
+  * There is an Amazon AMI that includes python. Check this out for suitability?
+  * Amazon Linux AMI 2018.03.0 
 2. I am using my [normal personal username].pem for a key
 3. from home dir of surface:  ssh -i coateds.pem ec2-user@34.214.227.227
 4. Prep the image if necessary with Python, PIP, Virtualenv, and requests (others?)
@@ -13,6 +15,7 @@ Goal: create a zip file that can be uploaded to AWS Lambda to create a new Pytho
 9. Run `aws lambda create-function` with options to build the function
 
 ## Install Python, PIP, Virtualenv and dependencies on EC2 instance
+* from home dir of surface:  ssh -i coateds.pem ec2-user@x.x.x.x  (34.220.205.62)
 * `sudo yum install -y gcc zlib zlib-devel openssl openssl-devel`
 * `wget https://www.python.org/ftp/python/3.6.1/Python-3.6.1.tgz`
   * This is NOT the latest version. It might be better to update to 3.6.5??
@@ -28,6 +31,8 @@ Choose the virtual environment that was installed via pip3
 
 Install libraries in the virtual environment
 * `pip install requests`
+
+`cd ~`
 
 ## Python file minimums
 ```
@@ -56,7 +61,7 @@ aws lambda create-function \
 --region us-west-2 \
 --function-name TestRequests \
 --zip-file fileb:///home/ec2-user/TestRequests.zip \
---role arn:aws:iam::817967764457:role/service-role/lambda_s3 \
+--role arn:aws:iam::XXXXXXXXXXXX:role/service-role/lambda_s3 \
 --handler TestRequests.handler \
 --runtime python3.6 \
 --timeout 10 --memory-size 1024
