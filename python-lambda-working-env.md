@@ -3,10 +3,9 @@ Goal: create a zip file that can be uploaded to AWS Lambda to create a new Pytho
 
 ## The top level sequence is
 1. Create an EC2 instance out of the Amazon Linux 2 AMI (Requires a 64-bit Amazon Linux instance)
-  * There is an Amazon AMI that includes python. Check this out for suitability?
-  * Amazon Linux AMI 2018.03.0 
+  * Amazon AMIs come with Python 2.7... To work with 3.6 upgrade/installation is necessary
 2. I am using my [normal personal username].pem for a key
-3. from home dir of surface:  ssh -i coateds.pem ec2-user@34.214.227.227
+3. from home dir of surface:  ssh -i [normal personal username].pem ec2-user@x.x.x.x
 4. Prep the image if necessary with Python, PIP, Virtualenv, and requests (others?)
 5. Paste the tested code into [function_name].py
 6. Zip the dependencies into [function_name].py
@@ -15,13 +14,12 @@ Goal: create a zip file that can be uploaded to AWS Lambda to create a new Pytho
 9. Run `aws lambda create-function` with options to build the function
 
 ## Install Python, PIP, Virtualenv and dependencies on EC2 instance
-* from home dir of surface:  ssh -i coateds.pem ec2-user@x.x.x.x  (34.220.205.62)
+* from home dir of surface:  ssh -i [normal personal username].pem ec2-user@x.x.x.x
 * `sudo yum install -y gcc zlib zlib-devel openssl openssl-devel`
-* `wget https://www.python.org/ftp/python/3.6.1/Python-3.6.1.tgz`
-  * This is NOT the latest version. It might be better to update to 3.6.5??
-* `tar -xzvf Python-3.6.1.tgz`
-  * or relevent version
-* `cd Python-3.6.1 && ./configure && make`
+* `wget https://www.python.org/ftp/python/3.6.1/Python-3.6.x.tgz`
+  * Currently using 3.6.5, substitute this in commands
+* `tar -xzvf Python-3.6.x.tgz`
+* `cd Python-3.6.x && ./configure && make`
 * `sudo make install`
 * `sudo /usr/local/bin/pip3 install virtualenv`
 
@@ -66,3 +64,19 @@ aws lambda create-function \
 --runtime python3.6 \
 --timeout 10 --memory-size 1024
 ```
+
+# Update the Python code process
+* If the EC2 instance is stopped
+  * Start it
+  * Log on
+  * 'Source' the venv
+* Start here if the EC2 is a;ready running and configured
+  * Update the .py file with new code
+  * Delete/Recreate the zip file
+* Delete the Lambda Function
+  * `aws lambda create-function ...`
+* Configure the function
+  * enter the env variable
+  * Create the test event
+  * TEST!!
+
