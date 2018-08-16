@@ -14,6 +14,7 @@ Goal: create a zip file that can be uploaded to AWS Lambda to create a new Pytho
 9. Run `aws lambda create-function` with options to build the function
 
 ## Install Python, PIP, Virtualenv and dependencies on EC2 instance
+* source:  https://docs.aws.amazon.com/lambda/latest/dg/with-s3-example-deployment-pkg.html
 * from home dir of surface:  ssh -i [normal personal username].pem ec2-user@x.x.x.x
 * `sudo yum install -y gcc zlib zlib-devel openssl openssl-devel`
 * `wget https://www.python.org/ftp/python/3.6.1/Python-3.6.x.tgz`
@@ -29,6 +30,7 @@ Choose the virtual environment that was installed via pip3
 
 Install libraries in the virtual environment
 * `pip install requests`
+* `pip install pytz`
 
 `cd ~`
 
@@ -80,3 +82,58 @@ aws lambda create-function \
   * Create the test event
   * TEST!!
 
+```
+aws lambda update-function-code \
+--function-name TestRequests \
+--zip-file fileb:///home/ec2-user/TestRequests.zip
+```
+
+## Environment post first working (beta) release
+* Prod lambda function
+  * coatedsforecastgridlambda
+  * execution role: coateds-forecast-grid-lambda-role
+  * CloudWatch event: forecastgridscheduledevent
+  * build on EC2 instance named "forecast grid"
+  * pip list
+    * Package    Version  
+    * ---------- ---------
+    * certifi    2018.8.13
+    * chardet    3.0.4    
+    * idna       2.7      
+    * pip        18.0     
+    * pytz       2018.5   
+    * requests   2.19.1   
+    * setuptools 40.0.0   
+    * urllib3    1.23     
+    * wheel      0.31.1  
+* Dev lambda function
+  * coatedsforecastgridlambda
+  * execution role: service-role/lambda_s3
+  * CloudWatch event: NONE
+  * build on EC2 instance named "Test Requests"
+  * pip list
+    * Package    Version  
+    * ---------- ---------
+    * certifi    2018.4.16
+    * chardet    3.0.4    
+    * idna       2.7      
+    * pip        18.0     
+    * pytz       2018.5   
+    * requests   2.19.1   
+    * setuptools 40.0.0   
+    * urllib3    1.23     
+    * wheel      0.31.1 
+* S3 web enabled bucket: coateds-forecast-grid-web
+
+Improvements list
+* "Last Run: "  timestamp
+  * code snippet in Dev
+  * Consider building a function
+* Clean up/refactor code
+* place in frame of davecoate.com
+* apply styles to table
+* Add weather locations (rafactor to make this easier?)
+
+Testing the SAM CLI
+* After setting up an environment like that above
+* pip install aws-sam-cli
