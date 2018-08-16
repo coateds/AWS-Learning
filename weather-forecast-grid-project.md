@@ -3,14 +3,14 @@
 With a scheduled Lambda Function, poll and retrieve weather forecast data from Open Weather Map API for sevaral locations in Washington. Present the data in an HTML table for easy comparison of that data on a web page.
 
 ## Requirements/Steps
-* An s3 bucket
+* An s3 bucket - Done:  Name:  `coateds-forcast-grid-web`
   * Open permissions for read from the Internet
   * Enable Static website hosting
-* An IAM role for the Lambda Function
+* An IAM role for the Lambda Function - Done:  Name:  `coateds-forecast-grid-lambda-role`
   * Lambda execution permission
-  * Cloud Watch permission
+  * Cloud Watch permission - redundant
   * s3 bucket permission
-* A Python Lambda Function
+* A Python Lambda Function:  Started:  Name:  `coateds-forecast-grid-lambda`
   * Scheduled Cloud Watch trigger
   * Read from OWM API (POC needed)
     * Internet access/vpc/gateway??
@@ -51,9 +51,9 @@ aws lambda create-function \
 
 aws lambda create-function \
 --region us-west-2 \
---function-name TestRequests \
---zip-file fileb:///home/ec2-user/TestRequests.zip \
---role arn:aws:iam::817967764457:role/service-role/lambda_s3 \
+--function-name coateds-forecast-grid-lambda \
+--zip-file fileb:///home/ec2-user/forecastgridlambda.zip \
+--role arn:aws:iam::817967764457:role/coateds-forecast-grid-lambda-role \
 --handler TestRequests.handler \
 --runtime python3.6 \
 --timeout 10 --memory-size 1024
