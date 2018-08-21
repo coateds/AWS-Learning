@@ -99,6 +99,6 @@ def handler(event, context):
         
         count += 1
 
-    htmlstr += '</table>\n'
+    htmlstr += '</table>\n'htmlstr += '</table>\n'
 
     writebuckettextfile('coateds-forecast-grid-web', 'index.html', htmlstr)
