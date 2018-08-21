@@ -126,13 +126,13 @@ aws lambda update-function-code \
 * S3 web enabled bucket: coateds-forecast-grid-web
 
 Improvements list
-* "Last Run: "  timestamp
+* "Last Run: "  timestamp - Done
   * code snippet in Dev
   * Consider building a function
 * Clean up/refactor code
-* place in frame of davecoate.com
-* apply styles to table
-* Add weather locations (rafactor to make this easier?)
+* place in frame of davecoate.com - 1/2 done
+* apply styles to table - done
+* Add weather locations (rafactor to make this easier?) - done
 
 Testing the SAM CLI
 * After setting up an environment like that above
