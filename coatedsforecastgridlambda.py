@@ -8,14 +8,7 @@ import pytz
 from pytz import all_timezones_set, common_timezones_set
 
 s3 = boto3.client('s3')
-
 tz = pytz.timezone('US/Pacific')
-
-def fulldate(dt):
-    return datetime.datetime.fromtimestamp(dt).strftime('%Y-%m-%d %H:%M:%S')
-
-def twentyfourhrtime(dt):
-    return datetime.datetime.fromtimestamp(dt).strftime('%H:%M:%S')
 
 def weekday(dt):
     return datetime.datetime.fromtimestamp(dt).strftime("%A")
@@ -42,64 +35,73 @@ def tblrowfromlist(elementlist):
     rtnstring = ''
     rtnstring += '\t<tr>\n'
 
-    # firstheader = ["Today", "Bothell", "Ashford", "Leavenworth"]
     for element in elementlist:
         rtnstring += f"\t\t<td>{element}</td>\n"
     rtnstring += '\t</tr>\n'
     return rtnstring
 
-# def timeFmt(timeEntry):
-#    inputTime = parse(timeEntry).replace(
-#                tzinfo=pytz.timezone("UTC")
-#    )
-#    convTime = inputTime.astimezone(pytz.timezone("US/Pacific"))
-#    return convTime
+def tblhdrfromlist(elementlist, style):
+    # trstyle = ' style="height: 40px; color: yellow; background-color: #12127d; font-weight: bold; vertical-align: bottom;"'
+
+    rtnstring = ''
+    rtnstring += '\t<tr style="height: 40px; color: yellow; background-color: #12127d; font-weight: bold; vertical-align: bottom">\n'
+
+    for element in elementlist:
+        rtnstring += f"\t\t<td>{element}</td>\n"
+    rtnstring += '\t</tr>\n'
+    return rtnstring
+
 
 def handler(event, context):
-    # Get the api key from environment variables
-    # will want another method at some point
-    api_key = os.getenv("OWM_API_KEY")
+    utc_time = datetime.datetime.utcnow()
+    pt = utc_time.astimezone(tz)
+    timestamp = f"Last Update: {pt.strftime('%H:%M:%S')}"
 
+    api_key = os.getenv("OWM_API_KEY")
     if not api_key:
         print("Error: no 'OWM_API_KEY' provided")
         sys.exit(1)
     # else:
         # print(api_key)
-    
-    bothellobj = getforecastobj(47.76, -122.20, api_key)
+
+    # bothellobj = getforecastobj(47.76, -122.20, api_key)
     ashfordobj = getforecastobj(46.75, -122.03, api_key)
     leavenworthobj = getforecastobj(47.60, -120.66, api_key)
 
-    htmlstr = '<table>\n'
+    marblemountobj = getforecastobj(48.53, -121.44, api_key)
+    winthropobj = getforecastobj(48.46, -120.18, api_key)
+    # indexobj = getforecastobj(47.82, -121.55, api_key)
+    northbendobj = getforecastobj(47.50, -121.78, api_key)
+    # cleelumobj = getforecastobj(47.20, -120.93, api_key)
+    ptangelesobj = getforecastobj(48.11, -123.44, api_key)
+    # quilceneobj = getforecastobj(47.82, -122.88, api_key)
 
-    strheader = tblrowfromlist(["Today", "Bothell", "Ashford", "Leavenworth"])
-    htmlstr += strheader
+    htmlstr = f"<p>{timestamp}</p>\n"
+    htmlstr += '<table style="width: 80%;" border="0" cellspacing="0" cellpadding="0">\n'
+    htmlstr += tblhdrfromlist(["Today", "Marblemount", "Winthrop", "North Bend", "Leavenworth", "Ashford", "Pt Angeles"], ' style="background-color: #12127d;"')
 
     count = 0
-    while count < bothellobj['cnt'] - 1:
-        utc_time = datetime.datetime.fromtimestamp(bothellobj['list'][count]['dt'])
+    while count < marblemountobj['cnt'] - 1:
+        utc_time = datetime.datetime.fromtimestamp(marblemountobj['list'][count]['dt'])
         pt = utc_time.astimezone(tz)
-        # print(pt.strftime('%H:%M:%S'))
-        # inputTime = parse(timeEntry).replace(tzinfo=pytz.timezone("UTC")
-        # print(inputTime.astimezone(pytz.timezone("US/Pacific")))
-        # print(twentyfourhrtime(datetime.datetime.fromtimestamp(pt)).astimezone(pacific))
-        # cell1 = twentyfourhrtime(bothellobj['list'][count]['dt'])
-        cell1 = pt.strftime('%H:%M:%S')
-        cell2 = str(bothellobj['list'][count]['weather'][0]['description']) + " " + str(round(cFar(bothellobj['list'][count]['main']['temp']), 1)) + "F"
-        cell3 = str(ashfordobj['list'][count]['weather'][0]['description']) + " " + str(round(cFar(ashfordobj['list'][count]['main']['temp']), 1)) + "F"
-        cell4 = str(leavenworthobj['list'][count]['weather'][0]['description']) + " " + str(round(cFar(leavenworthobj['list'][count]['main']['temp']), 1)) + "F"
-        strheader = tblrowfromlist([cell1, cell2, cell3, cell4])
-        htmlstr += strheader
 
-        # if str(pt.strftime('%H:%M:%S')).find('23:00') != -1:
-        if (str(pt.strftime('%H:%M:%S')).find('23:00') != -1) or (if str(pt.strftime('%H:%M:%S')).find('22:00') != -1):
-            strheader = tblrowfromlist(["&nbsp;", "&nbsp;", "&nbsp;", "&nbsp;"])
+        cell1 = pt.strftime('%H:%M:%S')
+        cell2 = str(marblemountobj['list'][count]['weather'][0]['description']) + " " + str(round(cFar(marblemountobj['list'][count]['main']['temp']), 1)) + "F"
+        cell3 = str(winthropobj['list'][count]['weather'][0]['description']) + " " + str(round(cFar(winthropobj['list'][count]['main']['temp']), 1)) + "F"
+        cell4 = str(northbendobj['list'][count]['weather'][0]['description']) + " " + str(round(cFar(northbendobj['list'][count]['main']['temp']), 1)) + "F"
+        cell5 = str(leavenworthobj['list'][count]['weather'][0]['description']) + " " + str(round(cFar(leavenworthobj['list'][count]['main']['temp']), 1)) + "F"
+        cell6 = str(ashfordobj['list'][count]['weather'][0]['description']) + " " + str(round(cFar(ashfordobj['list'][count]['main']['temp']), 1)) + "F"
+        cell7 = str(ptangelesobj['list'][count]['weather'][0]['description']) + " " + str(round(cFar(ptangelesobj['list'][count]['main']['temp']), 1)) + "F"
+        htmlstr += tblrowfromlist([cell1, cell2, cell3, cell4, cell5, cell6, cell7])
+
+        if (str(pt.strftime('%H:%M:%S')).find('23:00') != -1) or (str(pt.strftime('%H:%M:%S')).find('22:00') != -1):
+            # strheader = tblrowfromlist(["&nbsp;", "&nbsp;", "&nbsp;", "&nbsp;"])
+            # htmlstr += strheader
+            strheader = tblhdrfromlist([weekday(marblemountobj['list'][count + 1]['dt']), "Marblemount", "Winthrop", "North Bend", "Leavenworth", "Ashford", "Pt Angeles"], '')
             htmlstr += strheader
-            strheader = tblrowfromlist([weekday(bothellobj['list'][count + 1]['dt']), "Bothell", "Ashford", "Leavenworth"])
-            htmlstr += strheader
-        
+
         count += 1
 
-    htmlstr += '</table>\n'htmlstr += '</table>\n'
+    htmlstr += '</table>\n'
 
     writebuckettextfile('coateds-forecast-grid-web', 'index.html', htmlstr)
