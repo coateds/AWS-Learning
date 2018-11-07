@@ -137,3 +137,21 @@ Improvements list
 Testing the SAM CLI
 * After setting up an environment like that above
 * pip install aws-sam-cli
+
+## Nov-6 updates
+* https://aws.amazon.com/
+* https://signin.aws.amazon.com/signin?* redirect_uri=https%3A%2F%2Fconsole.aws.amazon.com%2Fconsole%2Fhome%3Fstate%3DhashArgs%2523%26isauthcode%3Dtrue&client_id=arn%3Aaws%3Aiam%3A%3A015428540659%3Auser%2Fhomepage&forceMobileApp=0
+* Login to AWS with MapManDave@gmail.com
+
+* start ec2 instance "forecast grid"
+* ssh -i [normal personal username].pem ec2-user@x.x.x.x
+
+* modify code in coatedsforecastgridlambda.py (make backups)
+* backup zip file?
+
+* source ~/shrink_venv/bin/activate
+* cd $VIRTUAL_ENV/lib/python3.6/site-packages
+* zip -r9 ~/coatedsforecastgridlambda.zip .
+* cd ~
+* zip -g coatedsforecastgridlambda.zip coatedsforecastgridlambda.py
+* aws lambda update-function-code --function-name coatedsforecastgridlambda --zip-file fileb:///home/ec2-user/coatedsforecastgridlambda.zip

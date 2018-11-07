@@ -91,7 +91,8 @@ def handler(event, context):
         strheader = tblrowfromlist([cell1, cell2, cell3, cell4])
         htmlstr += strheader
 
-        if str(pt.strftime('%H:%M:%S')).find('23:00') != -1:
+        # if str(pt.strftime('%H:%M:%S')).find('23:00') != -1:
+        if (str(pt.strftime('%H:%M:%S')).find('23:00') != -1) or (if str(pt.strftime('%H:%M:%S')).find('22:00') != -1):
             strheader = tblrowfromlist(["&nbsp;", "&nbsp;", "&nbsp;", "&nbsp;"])
             htmlstr += strheader
             strheader = tblrowfromlist([weekday(bothellobj['list'][count + 1]['dt']), "Bothell", "Ashford", "Leavenworth"])
